@@ -13,3 +13,5 @@ Our empirical results show that EHRFL effectively enables federated learning acr
 Furthermore, our results demonstrate the efficacy of our precision-based method in selecting 
 reduced number of participating clients without compromising model performance, resulting in lower operational costs when constructing institution-specific models.
 We believe this work lays a foundation for the broader adoption of federated learning on EHRs.
+
+- Paper link: Available Soon!
