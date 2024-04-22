@@ -23,14 +23,32 @@ We believe this work lays a foundation for the broader adoption of federated lea
 <summary>Pre-Training a Common Model</summary>
 
 A common pre-trained model is needed to extract latents from the host and subject datas. \
-The host can train this model with the following script (located in scripts/single.sh).
-
+The host can train this model by (1) setting the [Accelerate](https://huggingface.co/docs/accelerate/en/index) configuration and (2) running the code as follows. \
+**Accelerate Configuration:**
+```
+compute_environment: LOCAL_MACHINE
+distributed_type: MULTI_GPU # You May Use Multiple GPUs
+downcast_bf16: 'no'
+gpu_ids: [GPU IDs] 
+machine_rank: 0
+main_training_function: main
+mixed_precision: bf16
+num_machines: 1
+num_processes: [# of GPUs]
+rdzv_backend: static
+same_network: true
+tpu_env: []
+tpu_use_cluster: false
+tpu_use_sudo: false
+use_cpu: false
+```
+**Code Script** (also located in scripts/single.sh):
 ```
 CUDA_VISIBLE_DEVICES=[GPU IDs] \ # You May Use Multiple GPUs
 accelerate launch \
 --main_process_port [Port] \
 --num_processes [# of GPUs] \
---gpu_ids [GPU IDs] \ # # You May Use Multiple GPUs
+--gpu_ids [GPU IDs] \ # You May Use Multiple GPUs
 ../main.py \
 --input_path [Your Input Path] \
 --save_dir [Your Save Directory] \
@@ -54,8 +72,25 @@ accelerate launch \
 
 The host sends the pre-trained model to subject clients for latent extraction. \
 The host and subjects each extract latents with their respective data. \
-The script for this step is located in scripts/extract_latent.sh.
-
+**Accelerate Configuration:**
+```
+compute_environment: LOCAL_MACHINE
+distributed_type: 'NO'
+downcast_bf16: 'no'
+gpu_ids: [GPU ID] # Use a Single GPU
+machine_rank: 0
+main_training_function: main
+mixed_precision: 'no'
+num_machines: 1
+num_processes: 1
+rdzv_backend: static
+same_network: true
+tpu_env: []
+tpu_use_cluster: false
+tpu_use_sudo: false
+use_cpu: false
+```
+**Code Script** (also located in scripts/extract_latent.sh):
 ```
 CUDA_VISIBLE_DEVICES=[GPU ID] \ # Use a Single GPU
 accelerate launch \
@@ -89,7 +124,6 @@ accelerate launch \
 The host uses the extracted latents to compute precision (and recall) for each host-subject pair. \
 This step is necessary for selecting clients for federated learning participation. \
 The script for this step is located in scripts/precision_recall.sh.
-
 ```
 python ../precision_recall.py \
 --data_path [Your Data Path] \ # [Root Save Directory]/latents/seed_{seed}
@@ -104,16 +138,34 @@ python ../precision_recall.py \
 <summary>Federated Learning on Selected Participating Clients</summary>
 
 The host selects participating clients by excluding clients of low precision scores. \
-With the selected clients, the host may then conduct federated learning using our EHRFL framework for heterogeneous EHR modeling. \
-The script for this step is located in scripts/federated.sh. 
+With the selected clients, the host may then conduct federated learning using our EHRFL framework for heterogeneous EHR modeling.
 
+**Accelerate Configuration:**
+```
+compute_environment: LOCAL_MACHINE
+distributed_type: MULTI_GPU # You May Use Multiple GPUs
+downcast_bf16: 'no'
+gpu_ids: [GPU IDs] 
+machine_rank: 0
+main_training_function: main
+mixed_precision: bf16
+num_machines: 1
+num_processes: [# of GPUs]
+rdzv_backend: static
+same_network: true
+tpu_env: []
+tpu_use_cluster: false
+tpu_use_sudo: false
+use_cpu: false
+```
+**Code Script** (also located in scripts/federated.sh):
 
 ```
 CUDA_VISIBLE_DEVICES=[GPU IDs] \ # You May Use Multiple GPUs
 accelerate launch \
 --main_process_port [Port] \
 --num_processes [# of GPUs] \
---gpu_ids [GPU IDs] \ # # You May Use Multiple GPUs
+--gpu_ids [GPU IDs] \ # You May Use Multiple GPUs
 ../main.py \
 --input_path [Your Input Path] \
 --save_dir [Your Save Directory] \
