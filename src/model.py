@@ -13,7 +13,7 @@ class GenHPF(nn.Module):
         super().__init__()
         self.args = args
 
-        self.input2emb_model = DescEmb(args)
+        self.input2emb_model = TextEmb(args)
         if args.eventencoder == "transformer":
             self.eventencoder_model = TransformerEventEncoder(args)
         else:
@@ -36,7 +36,7 @@ class GenHPF(nn.Module):
         return net_output
 
 
-class DescEmb(nn.Module):
+class TextEmb(nn.Module):
     def __init__(self, args, embed_dim=None):
         super().__init__()
         
