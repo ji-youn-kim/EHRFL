@@ -24,7 +24,7 @@ We believe this work lays a foundation for the broader adoption of federated lea
 
 A common pre-trained model is needed to extract latents from the host and subject datas. \
 The host can train this model by (1) setting the [Accelerate](https://huggingface.co/docs/accelerate/en/index) configuration and (2) running the code as follows. \
-**Accelerate Configuration:**
+**Accelerate Config:**
 ```
 compute_environment: LOCAL_MACHINE
 distributed_type: MULTI_GPU # You May Use Multiple GPUs
@@ -72,7 +72,7 @@ accelerate launch \
 
 The host sends the pre-trained model to subject clients for latent extraction. \
 The host and subjects each extract latents with their respective data. \
-**Accelerate Configuration:**
+**Accelerate Config:**
 ```
 compute_environment: LOCAL_MACHINE
 distributed_type: 'NO'
@@ -140,7 +140,7 @@ python ../precision_recall.py \
 The host selects participating clients by excluding clients of low precision scores. \
 With the selected clients, the host may then conduct federated learning using our EHRFL framework for heterogeneous EHR modeling.
 
-**Accelerate Configuration:**
+**Accelerate Config:**
 ```
 compute_environment: LOCAL_MACHINE
 distributed_type: MULTI_GPU # You May Use Multiple GPUs
@@ -224,6 +224,9 @@ git checkout federated
 python main.py --ehr mimiciii --dest [Your Output Path] --first_icu --seed 42,43,44,45,46 --mortality --long_term_mortality --los_3day --los_7day --readmission --final_acuity --imminent_discharge --diagnosis --creatinine --bilirubin --platelets --wbc
 python main.py --ehr mimiciv --dest [Your Output Path] --first_icu --seed 42,43,44,45,46 --mortality --long_term_mortality --los_3day --los_7day --readmission --final_acuity --imminent_discharge --diagnosis --creatinine --bilirubin --platelets --wbc
 python main.py --ehr eicu --dest [Your Output Path] --first_icu --seed 42,43,44,45,46 --mortality --long_term_mortality --los_3day --los_7day --readmission --final_acuity --imminent_discharge --diagnosis --creatinine --bilirubin --platelets --wbc
+
+# For cohort split
+python ehrs/federated.py --dest [Your Output Path]
 ```
 
 </details>
