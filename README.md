@@ -213,7 +213,7 @@ pip install pandas==1.4.3 \
 
 <summary>Dataset Preprocessing</summary>
 
-Our experiments use the following datasets: [MIMIC-III](https://physionet.org/files/mimiciii/1.4/), [MIMIC-IV](https://physionet.org/files/mimiciv/2.0/), [eICU](https://physionet.org/files/eicu-crd/2.0/). \
+Our experiments use the following datasets: [MIMIC-III](https://physionet.org/content/mimiciii/1.4/), [MIMIC-IV](https://physionet.org/content/mimiciv/2.0/), [eICU](https://physionet.org/content/eicu-crd/2.0/). \
 Preprocess the data with [Integrated-EHR-Pipeline](https://github.com/Jwoo5/integrated-ehr-pipeline) as follows:
 
 ```
