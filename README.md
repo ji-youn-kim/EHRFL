@@ -14,7 +14,7 @@ Furthermore, our results demonstrate the efficacy of our precision-based method 
 reduced number of participating clients without compromising model performance, resulting in lower operational costs when constructing institution-specific models.
 We believe this work lays a foundation for the broader adoption of federated learning on EHRs.
 
-- Paper link: Available Soon!
+- Paper link: [EHRFL: Federated Learning Framework for Heterogeneous EHRs and Precision-guided Selection of Participating Clients](http://arxiv.org/abs/2404.13318)
 
 ## Step-by-Step Guide
 
@@ -231,3 +231,14 @@ python ehrs/federated.py --dest [Your Output Path]
 
 </details>
 
+## Citation
+```
+@misc{kim2024ehrfl,
+      title={EHRFL: Federated Learning Framework for Heterogeneous EHRs and Precision-guided Selection of Participating Clients}, 
+      author={Jiyoun Kim and Junu Kim and Kyunghoon Hur and Edward Choi},
+      year={2024},
+      eprint={2404.13318},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG}
+}
+```
