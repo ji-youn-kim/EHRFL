@@ -2,7 +2,7 @@
 <table align="center">
   <tr>
     <td><img src="https://github.com/ji-youn-kim/EHRFL/blob/master/resources/Figure1.png?raw=true" width="500"/></td>
-    <td><img src="https://github.com/ji-youn-kim/EHRFL/blob/master/resources/Figure2.png?raw=true" width="500"/></td>
+    <td><img src="https://github.com/ji-youn-kim/EHRFL/blob/master/resources/Figure2.png?raw=true" width="600"/></td>
   </tr>
 </table>
 
@@ -199,12 +199,11 @@ source activate EHRFL
 # Install required packages
 conda install -y pytorch==1.11.0 torchvision==0.12.0 torchaudio==0.11.0 cudatoolkit=11.3 -c pytorch
 
-pip install pandas==1.4.3 \
-            transformers==4.39.0 \
-            accelerate==0.27.2 \
-            scikit-learn==1.2.2 \
-            tqdm==4.65.0 \
-            wandb==0.12.21
+# For main code
+pip install pandas==1.4.3 transformers==4.39.0 accelerate==0.27.2 scikit-learn==1.2.2 tqdm==4.65.0 wandb==0.12.21
+
+# For dataset preprocessing
+pip install numpy==1.22.3 treelib==1.6.1 pyspark==3.3.1
 ```
 
 </details>
