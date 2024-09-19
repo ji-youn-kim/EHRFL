@@ -1,4 +1,4 @@
-# EHRFL: Federated Learning Framework for Heterogeneous EHRs and Precision-guided Selection of Participating Clients
+# EHRFL: Federated Learning Framework for Institution-Specific Model Construction using Electronic Health Records
 <table align="center">
   <tr>
     <td><img src="https://github.com/ji-youn-kim/EHRFL/blob/master/resources/Figure1.png?raw=true" width="500"/></td>
@@ -7,14 +7,14 @@
 </table>
 
 ## Overview
-In this study, we provide solutions to two practical yet overlooked scenarios in federated learning for electronic health records (EHRs): firstly, we introduce EHRFL, a framework that facilitates federated learning across healthcare institutions with distinct medical coding systems and database schemas using text-based linearization of EHRs. 
-Secondly, we focus on a scenario where a single healthcare institution initiates federated learning to build a model tailored for itself, in which the number of clients must be optimized in order to reduce expenses incurred by the host. For selecting participating clients, we present a novel precision-based method, leveraging data latents to identify suitable participants for the institution.
-Our empirical results show that EHRFL effectively enables federated learning across hospitals with different EHR systems. 
-Furthermore, our results demonstrate the efficacy of our precision-based method in selecting 
-reduced number of participating clients without compromising model performance, resulting in lower operational costs when constructing institution-specific models.
-We believe this work lays a foundation for the broader adoption of federated learning on EHRs.
+The increasing volume of electronic health records (EHRs) across healthcare institutions presents the opportunity to enhance model accuracy and robustness in clinical prediction tasks. 
+Federated learning enables training on data from multiple institutions while preserving patient privacy and complying to regulatory constraints.
+However, most federated learning research focuses on constructing a global model for multiple clients, overlooking the practical need for institution-specific models.
+In this work, we introduce EHRFL, a federated learning framework using EHRs designed to develop a model tailored to a single healthcare institution.
+Our framework addresses two key challenges: (1) enabling federated learning across institutions with heterogeneous EHR systems using text-based EHR modeling, and (2) reducing the costs associated with federated learning by selecting suitable participating clients using averaged patient embeddings, which enables optimizing the number of participants without compromising model performance for the institution.
+Our experiment results on multiple open-source EHR datasets demonstrate the effectiveness of EHRFL in addressing the two challenges, establishing it as a practical solution for institution-specific model development in federated learning.
 
-- Paper link: [EHRFL: Federated Learning Framework for Heterogeneous EHRs and Precision-guided Selection of Participating Clients](http://arxiv.org/abs/2404.13318)
+- Paper link: [EHRFL: Federated Learning Framework for Institution-Specific Model Construction using Electronic Health Records](http://arxiv.org/abs/2404.13318)
 
 ## Step-by-Step Guide
 
@@ -22,8 +22,9 @@ We believe this work lays a foundation for the broader adoption of federated lea
   
 <summary>Pre-Training a Common Model</summary>
 
-A common pre-trained model is needed to extract latents from the host and subject datas. \
-The host can train this model by (1) setting the [Accelerate](https://huggingface.co/docs/accelerate/en/index) configuration and (2) running the code as follows. \
+A common pre-trained model is needed to extract patient embeddings from the host (i.e., client initiating federated learning) and candidate subject (i.e., client participating in federated learning alongside the host) datas. \
+The host can train this model by (1) setting the [Accelerate](https://huggingface.co/docs/accelerate/en/index) configuration and (2) running the code as follows. 
+
 **Accelerate Config:**
 ```
 compute_environment: LOCAL_MACHINE
@@ -42,7 +43,7 @@ tpu_use_cluster: false
 tpu_use_sudo: false
 use_cpu: false
 ```
-**Code Script** (also located in scripts/single.sh):
+**Code Script** (scripts/single.sh):
 ```
 CUDA_VISIBLE_DEVICES=[GPU IDs] \ # You May Use Multiple GPUs
 accelerate launch \
@@ -68,10 +69,11 @@ accelerate launch \
 
 <details>
 
-<summary>Latent Extraction</summary>
+<summary>Patient Embedding Extraction</summary>
 
-The host sends the pre-trained model to subject clients for latent extraction. \
-The host and subjects each extract latents with their respective data. \
+The host sends the pre-trained model to each candidate subject for patient embedding extraction. \
+The host and each candidate subject extracts patient embeddings with their respective data. 
+
 **Accelerate Config:**
 ```
 compute_environment: LOCAL_MACHINE
@@ -90,7 +92,7 @@ tpu_use_cluster: false
 tpu_use_sudo: false
 use_cpu: false
 ```
-**Code Script** (also located in scripts/extract_latent.sh):
+**Code Script** (scripts/extract_latent.sh):
 ```
 CUDA_VISIBLE_DEVICES=[GPU ID] \ # Use a Single GPU
 accelerate launch \
@@ -119,26 +121,28 @@ accelerate launch \
 
 <details>
 
-<summary>Precision Computation</summary>
+<summary>Similarity Computation using Averaged Patient Embeddings</summary>
 
-The host uses the extracted latents to compute precision (and recall) for each host-subject pair. \
-This step is necessary for selecting clients for federated learning participation. \
-The script for this step is located in scripts/precision_recall.sh.
+The host and each candidate subject generates an averaged patient embedding by averaging their respective patient embeddings. \
+Each candidate subject sends their averaged patient embedding to the host. \
+The host uses the averaged patient embeddings to compute host-subject similarity for each candidate subject. \
+This step is necessary for selecting clients for federated learning participation. 
+
+**Code Script** (scripts/similarity.sh)
 ```
-python ../precision_recall.py \
---data_path [Your Data Path] \ # [Root Save Directory]/latents/seed_{seed}
---host [Host Datas] \
---subjects [Subject Datas]
+python ../similarity.py \
+--host_dir [Directory to Host Embeddings] \
+--subj_dir [Directory to Subject Embeddings in Comma Separated List]
 ```
 
 </details>
 
 <details>
   
-<summary>Federated Learning on Selected Participating Clients</summary>
+<summary>Federated Learning for the Host with Selected Subjects</summary>
 
-The host selects participating clients by excluding clients of low precision scores. \
-With the selected clients, the host may then conduct federated learning using our EHRFL framework for heterogeneous EHR modeling.
+The host selects participating subjects by excluding candidate subjects of low similarity scores or large distances with the host. \
+With our framework, the host may start building their institution-specific model by conducting federated learning with the selected clients, using text-based EHR federated learning to enable training across clients of heterogeneous EHR systems.
 
 **Accelerate Config:**
 ```
@@ -158,7 +162,7 @@ tpu_use_cluster: false
 tpu_use_sudo: false
 use_cpu: false
 ```
-**Code Script** (also located in scripts/federated.sh):
+**Code Script** (scripts/federated.sh):
 
 ```
 CUDA_VISIBLE_DEVICES=[GPU IDs] \ # You May Use Multiple GPUs
@@ -178,7 +182,7 @@ accelerate launch \
 --batch_size 64 \
 --wandb_project_name [Your Wandb Project Name] \
 --wandb_entity_name [Your Wandb Entity Name] \
---src_data [Clients involved in Federated Learning] \
+--src_data [s involved in Federated Learning] \
 --mixed_precision bf16
 ```
 
@@ -200,7 +204,7 @@ source activate EHRFL
 conda install -y pytorch==1.11.0 torchvision==0.12.0 torchaudio==0.11.0 cudatoolkit=11.3 -c pytorch
 
 # For main code
-pip install pandas==1.4.3 transformers==4.39.0 accelerate==0.27.2 scikit-learn==1.2.2 tqdm==4.65.0 wandb==0.12.21
+pip install pandas==1.4.3 transformers==4.39.0 accelerate==0.27.2 scikit-learn==1.2.2 tqdm==4.65.0 fire==0.5.0 wandb==0.12.21
 
 # For dataset preprocessing
 pip install numpy==1.22.3 treelib==1.6.1 pyspark==3.3.1
@@ -233,7 +237,7 @@ python ehrs/federated.py --dest [Your Output Path]
 ## Citation
 ```
 @misc{kim2024ehrfl,
-      title={EHRFL: Federated Learning Framework for Heterogeneous EHRs and Precision-guided Selection of Participating Clients}, 
+      title={EHRFL: Federated Learning Framework for Institution-Specific Model Construction using Electronic Health Records}, 
       author={Jiyoun Kim and Junu Kim and Kyunghoon Hur and Edward Choi},
       year={2024},
       eprint={2404.13318},
