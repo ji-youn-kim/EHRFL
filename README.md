@@ -1,4 +1,4 @@
-# EHRFL: Federated Learning Framework for Institution-Specific Model Construction using Electronic Health Records
+# Client-Centered Federated Learning for Heterogeneous EHRs: Use Fewer Participants to Achieve the Same Performance
 <table align="center">
   <tr>
     <td><img src="https://github.com/ji-youn-kim/EHRFL/blob/master/resources/Figure1.png?raw=true" width="500"/></td>
@@ -7,14 +7,14 @@
 </table>
 
 ## Overview
-The increasing volume of electronic health records (EHRs) across healthcare institutions presents the opportunity to enhance model accuracy and robustness in clinical prediction tasks. 
-Federated learning enables training on data from multiple institutions while preserving patient privacy and complying to regulatory constraints.
-However, most federated learning research focuses on constructing a global model for multiple clients, overlooking the practical need for institution-specific models.
-In this work, we introduce EHRFL, a federated learning framework using EHRs designed to develop a model tailored to a single healthcare institution.
-Our framework addresses two key challenges: (1) enabling federated learning across institutions with heterogeneous EHR systems using text-based EHR modeling, and (2) reducing the costs associated with federated learning by selecting suitable participating clients using averaged patient embeddings, which enables optimizing the number of participants without compromising model performance for the institution.
-Our experiment results on multiple open-source EHR datasets demonstrate the effectiveness of EHRFL in addressing the two challenges, establishing it as a practical solution for institution-specific model development in federated learning.
+The increasing volume of electronic health records (EHRs) presents the opportunity to improve the accuracy and robustness of models in clinical prediction tasks. 
+Unlike traditional centralized approaches, federated learning enables training on data from multiple institutions while preserving patient privacy and complying with regulatory constraints.
+However, most federated learning research focuses on building a global model to serve multiple clients, overlooking the practical need for a client-specific model.
+In this work, we introduce EHRFL, a federated learning framework using EHRs, designed to develop a model tailored to a single client (i.e., healthcare institution).
+Our framework addresses two key challenges: (1) enabling federated learning across clients with heterogeneous EHR systems using text-based EHR modeling, and (2) reducing the cost of federated learning by selecting suitable participating clients using averaged patient embeddings.
+Our experiment results on multiple open-source EHR datasets demonstrate the effectiveness of EHRFL in addressing the two challenges, establishing it as a practical solution for building a client-specific model in federated learning.
 
-- Paper link: [EHRFL: Federated Learning Framework for Institution-Specific Model Construction using Electronic Health Records](http://arxiv.org/abs/2404.13318)
+- Paper link: [Client-Centered Federated Learning for Heterogeneous EHRs: Use Fewer Participants to Achieve the Same Performance](http://arxiv.org/abs/2404.13318)
 
 ## Step-by-Step Guide
 
@@ -22,7 +22,7 @@ Our experiment results on multiple open-source EHR datasets demonstrate the effe
   
 <summary>Pre-Training a Common Model</summary>
 
-A common pre-trained model is needed to extract patient embeddings from the host (i.e., client initiating federated learning) and candidate subject (i.e., client participating in federated learning alongside the host) datas. \
+A common pre-trained model is needed to extract patient embeddings from the host (i.e., the client initiating federated learning) and candidate subject (i.e., the candidate client participating in federated learning alongside the host) datas. \
 The host can train this model by (1) setting the [Accelerate](https://huggingface.co/docs/accelerate/en/index) configuration and (2) running the code as follows. 
 
 **Accelerate Config:**
@@ -139,10 +139,10 @@ python ../similarity.py \
 
 <details>
   
-<summary>Federated Learning for the Host with Selected Subjects</summary>
+<summary>Text-based EHR Federated Learning for the Host with Selected Subjects</summary>
 
 The host selects participating subjects by excluding candidate subjects of low similarity scores or large distances with the host. \
-With our framework, the host may start building their institution-specific model by conducting federated learning with the selected clients, using text-based EHR federated learning to enable training across clients of heterogeneous EHR systems.
+With our framework, the host may start building their client-specific model by conducting federated learning with the selected clients, using text-based EHR federated learning to enable training across clients of heterogeneous EHR systems.
 
 **Accelerate Config:**
 ```
@@ -236,12 +236,13 @@ python ehrs/federated.py --dest [Your Output Path]
 
 ## Citation
 ```
-@misc{kim2024ehrfl,
-      title={EHRFL: Federated Learning Framework for Institution-Specific Model Construction using Electronic Health Records}, 
+@misc{kim2025clientcenteredfederatedlearningheterogeneous,
+      title={Client-Centered Federated Learning for Heterogeneous EHRs: Use Fewer Participants to Achieve the Same Performance}, 
       author={Jiyoun Kim and Junu Kim and Kyunghoon Hur and Edward Choi},
-      year={2024},
+      year={2025},
       eprint={2404.13318},
       archivePrefix={arXiv},
-      primaryClass={cs.LG}
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2404.13318}, 
 }
 ```
