@@ -1,4 +1,4 @@
-# Client-Centered Federated Learning for Heterogeneous EHRs: Use Fewer Participants to Achieve the Same Performance
+# Federated learning for heterogeneous electronic health record systems with cost effective participant selection
 <table align="center">
   <tr>
     <td><img src="https://github.com/ji-youn-kim/EHRFL/blob/master/resources/Figure1.png?raw=true" width="500"/></td>
@@ -7,14 +7,9 @@
 </table>
 
 ## Overview
-The increasing volume of electronic health records (EHRs) presents the opportunity to improve the accuracy and robustness of models in clinical prediction tasks. 
-Unlike traditional centralized approaches, federated learning enables training on data from multiple institutions while preserving patient privacy and complying with regulatory constraints.
-However, most federated learning research focuses on building a global model to serve multiple clients, overlooking the practical need for a client-specific model.
-In this work, we introduce EHRFL, a federated learning framework using EHRs, designed to develop a model tailored to a single client (i.e., healthcare institution).
-Our framework addresses two key challenges: (1) enabling federated learning across clients with heterogeneous EHR systems using text-based EHR modeling, and (2) reducing the cost of federated learning by selecting suitable participating clients using averaged patient embeddings.
-Our experiment results on multiple open-source EHR datasets demonstrate the effectiveness of EHRFL in addressing the two challenges, establishing it as a practical solution for building a client-specific model in federated learning.
+The increasing volume of electronic health records (EHRs) presents the opportunity to improve the accuracy and robustness of models in clinical prediction tasks. Unlike traditional centralized approaches, federated learning enables training on data from multiple institutions while preserving patient privacy and complying with regulatory constraints. In practice, healthcare institutions (i.e., hosts) often need to build predictive models tailored to their specific needs (e.g., creatinine-level prediction, N-day readmission prediction) using federated learning. When building a federated learning model for a single healthcare institution, two key challenges arise: (1) ensuring compatibility across heterogeneous EHR systems, and (2) managing federated learning costs within budget constraints. Specifically, heterogeneity in EHR systems across institutions hinders compatible modeling, while the computational costs of federated learning can exceed practical budget limits for healthcare institutions. To address these challenges, we propose EHRFL, a federated learning framework designed for building a cost-effective, host-specific predictive model using patient EHR data. EHRFL consists of two components: (1) text-based EHR modeling, which facilitates cross-institution compatibility without costly data standardization, and (2) a participant selection strategy based on averaged patient embedding similarity to reduce the number of participants without degrading performance. Our participant selection strategy sharing averaged patient embeddings is differentially private, ensuring patient privacy. Experiments on multiple open-source EHR datasets demonstrate the effectiveness of both components. With our framework, healthcare institutions can build institution-specific predictive models under budgetary constraints with reduced costs and time.
 
-- Paper link: [Client-Centered Federated Learning for Heterogeneous EHRs: Use Fewer Participants to Achieve the Same Performance](http://arxiv.org/abs/2404.13318)
+- Paper link: [Federated learning for heterogeneous electronic health record systems with cost effective participant selection](http://arxiv.org/abs/2404.13318)
 
 ## Step-by-Step Guide
 
@@ -236,13 +231,11 @@ python ehrs/federated.py --dest [Your Output Path]
 
 ## Citation
 ```
-@misc{kim2025clientcenteredfederatedlearningheterogeneous,
-      title={Client-Centered Federated Learning for Heterogeneous EHRs: Use Fewer Participants to Achieve the Same Performance}, 
-      author={Jiyoun Kim and Junu Kim and Kyunghoon Hur and Edward Choi},
-      year={2025},
-      eprint={2404.13318},
-      archivePrefix={arXiv},
-      primaryClass={cs.LG},
-      url={https://arxiv.org/abs/2404.13318}, 
+@article{kim2026federated,
+  title={Federated learning for heterogeneous electronic health record systems with cost effective participant selection},
+  author={Kim, Jiyoun and Kim, Junu and Hur, Kyunghoon and Choi, Edward},
+  journal={Scientific Reports},
+  year={2026},
+  publisher={Nature Publishing Group UK London}
 }
 ```
